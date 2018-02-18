@@ -177,7 +177,7 @@ def run():
         
         sess.run(tf.global_variables_initializer())
         # TODO: Train NN using the train_nn function
-        logits, train_op, cross_entropy_loss = train_nn(sess, epochs, batch_size, get_batches_fn, training_operation,
+        train_nn(sess, epochs, batch_size, get_batches_fn, training_operation,
                                                         cross_entropy_loss, image_input, labels,
                                                         keep_prob, learning_rate)
 
