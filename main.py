@@ -3,6 +3,7 @@ import tensorflow as tf
 tf.logging.set_verbosity(tf.logging.INFO)
 import helper
 import warnings
+import timeit
 from distutils.version import LooseVersion
 import project_tests as tests
 
@@ -127,6 +128,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     
     for i in range(epochs):
         print("New epoch started")
+        start_time = timeit.default_timer()
         for image, label in get_batches_fn(batch_size):
             print("New batch started")
             sess.run(train_op,
@@ -135,6 +137,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
                                 keep_prob: 0.5,
                                 learning_rate: 0.001
                                })
+        print("Elapsed time = {:.1f} seconds".format(timeit.default_timer() - start_time))
 tests.test_train_nn(train_nn)
 
 
@@ -146,8 +149,8 @@ def run():
     tests.test_for_kitti_dataset(data_dir)
     
     learning_rate = tf.placeholder(tf.float32)
-    epochs = 6
-    batch_size = 4
+    epochs = 10
+    batch_size = 16
     labels = tf.placeholder(tf.int32, (None, None, None, num_classes))
     #input_images = tf.placeholder(tf.int32, (None, image_shape[0], image_shape[1], num_classes))
 
@@ -179,7 +182,7 @@ def run():
                                                         keep_prob, learning_rate)
 
         # TODO: Save inference data using helper.save_inference_samples
-        #  helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
+        helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, image_input)
 
         # OPTIONAL: Apply the trained model to a video
 
