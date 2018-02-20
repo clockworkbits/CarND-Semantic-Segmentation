@@ -60,32 +60,32 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     :return: The Tensor for the last layer of output
     """
     # TODO: Implement function
-    layer_7_conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same',
+    layer_7_conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev=0.01),
                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     
     #print(layer_7_conv_1x1)
     
-    layer_7_upscale_x2 = tf.layers.conv2d_transpose(layer_7_conv_1x1, num_classes, 4, strides=(2, 2), padding='same',
+    layer_7_upscale_x2 = tf.layers.conv2d_transpose(layer_7_conv_1x1, num_classes, 4, strides=(2, 2), padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev=0.01),
                                        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     #print(layer_7_upscale_x2)
     # First skip connection
-    layer_4_conv_1x1 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same',
+    layer_4_conv_1x1 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev=0.01),
                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     layer_one = tf.add(layer_7_upscale_x2, layer_4_conv_1x1)
 
     # Upscale again
-    layer_one_upscale_x2 = tf.layers.conv2d_transpose(layer_one, num_classes, 4, strides=(2, 2), padding='same',
+    layer_one_upscale_x2 = tf.layers.conv2d_transpose(layer_one, num_classes, 4, strides=(2, 2), padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev=0.01),
                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     
     #Second skip connection
-    layer_3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same',
+    layer_3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev=0.01),
                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     
     # Second skip connection
     layer_two = tf.add(layer_one_upscale_x2, layer_3_conv_1x1)
 
-    return tf.layers.conv2d_transpose(layer_two, num_classes, 16, strides=(8, 8), padding='same',
+    return tf.layers.conv2d_transpose(layer_two, num_classes, 16, strides=(8, 8), padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev=0.01),
                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     
 tests.test_layers(layers)
@@ -149,7 +149,7 @@ def run():
     tests.test_for_kitti_dataset(data_dir)
     
     learning_rate = tf.placeholder(tf.float32)
-    epochs = 10
+    epochs = 5
     batch_size = 16
     labels = tf.placeholder(tf.int32, (None, None, None, num_classes))
     #input_images = tf.placeholder(tf.int32, (None, image_shape[0], image_shape[1], num_classes))
