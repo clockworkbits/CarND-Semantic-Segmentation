@@ -131,7 +131,6 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         start_time = timeit.default_timer()
         total_loss = 0
         for image, label in get_batches_fn(batch_size):
-            print("New batch started")
             sess.run(train_op,
                      feed_dict={input_image: image,
                                 correct_label: label,
@@ -158,7 +157,7 @@ def run():
     tests.test_for_kitti_dataset(data_dir)
     
     learning_rate = tf.placeholder(tf.float32)
-    epochs = 5
+    epochs = 10
     batch_size = 16
     labels = tf.placeholder(tf.int32, (None, None, None, num_classes))
     #input_images = tf.placeholder(tf.int32, (None, image_shape[0], image_shape[1], num_classes))
